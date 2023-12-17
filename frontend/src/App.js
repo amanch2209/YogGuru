@@ -62,7 +62,7 @@ const App = () => {
     <div className='container'>
       <header>
         <img src={logo} alt="Yoga Class Logo" className='logo' />
-        <h1>Yoga Class Admission Form</h1>
+        <p className='h1'>YogGuru Admission Form</p>
       </header>
       <main>
         <form onSubmit={handleSubmit}>
