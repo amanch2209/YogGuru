@@ -6,6 +6,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import './index.css'
 import logo from './images/logo.png';
 import {useNavigate} from 'react-router-dom'
+const Stripe = require('stripe')
+
 
 const App = () => {
   // const navigate = useNavigate();
@@ -94,7 +96,31 @@ const App = () => {
       // navigate.push("/login");
     }
   }
-  
+
+
+//   const stripe  = new Stripe("pk_test_51OOnS0SJze0uzSMvUw2yUYUIchshSjsibFSvrHtZhLtZpa7k6W1LimnsauV8DvwNBywJIDCh1y9cuw2b8j8qriWH00tR5YR4ad")
+
+//   // Assume you have a button or event that triggers the payment process
+// document.getElementById('checkoutButton').addEventListener('click', async () => {
+//   try {
+//     // Make a request to your server to create a Checkout Session
+//     const response = await fetch('/create-checkout-session', { method: 'POST' });
+//     const session = await response.json();
+
+//     // Redirect the user to the Stripe Checkout page
+//     const result = await stripe.redirectToCheckout({ sessionId: session.id });
+
+//     // Handle the result if needed (e.g., check for errors)
+//     if (result.error) {
+//       console.error(result.error);
+//       // Handle the error appropriately
+//     }
+//   } catch (error) {
+//     console.error('Error creating Checkout Session:', error);
+//     // Handle the error appropriately
+//   }
+// });
+
 
   return (
     <div className='container'>
@@ -128,7 +154,7 @@ const App = () => {
           </label>
           <br />
             <a href="/" target="_blank" rel="noopener noreferrer">
-            <button type="submit">Make Payment</button>
+            <button type="submit" id='checkoutButton'>Make Payment</button>
             </a>          
         </form>
       </main>

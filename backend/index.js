@@ -2,7 +2,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const dotenv = require('dotenv').config()
+const dotenv = require('dotenv').config();
+const Stripe = require('stripe')
 
 const app = express();
 const PORT = process.env.PORT || 3001
@@ -25,6 +26,30 @@ const yogaClassSchema = new mongoose.Schema({
   selectedBatch: { type: String, required: true },
   timestamp: { type: Date, default: Date.now },
 });
+
+// payment gateway
+const stripe  = new Stripe("pk_test_51OOnS0SJze0uzSMvUw2yUYUIchshSjsibFSvrHtZhLtZpa7k6W1LimnsauV8DvwNBywJIDCh1y9cuw2b8j8qriWH00tR5YR4ad")
+app.post("/create-checkout-session",async(req,res)=>{
+
+  try{
+   const params = {
+       submit_type : 'pay',
+       mode : "payment",
+       payment_method_types : ['card'],
+
+       success_url : `${process.env.FRONTEND_URL}`,
+       cancel_url : `${process.env.FRONTEND_URL}`,
+
+   }
+   const session = await stripe.checkout.sessions.create(params)
+      // console.log(session)
+      res.status(200).json(session.id)
+     }
+     catch (err){
+        res.status(err.statusCode || 500).json(err.message)
+     }
+
+})
 
 // Create a model based on the schema
 const YogaClass = mongoose.model('login', yogaClassSchema);
