@@ -83,12 +83,28 @@ body {
     width: 60%;
     padding: 12px;
   }
+
+  a{
+    display: flex;
+    justify-content:center ;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    margin-top: 0px;
+    font-size: 16px;
+    background: white;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-family: 'Ubuntu', sans-serif;
+    text-decoration: none;
+  }
   
   button {
     width: 50%;
     padding: 12px;
     margin-bottom: 20px;
-    margin-top: 20px;
+    margin-top: 0px;
     border: 1px solid #cccccc;
     border-radius: 6px;
     font-size: 16px;

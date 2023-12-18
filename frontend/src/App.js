@@ -4,13 +4,16 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './index.css'
-import logo from './images/logo.png'
+import logo from './images/logo.png';
+import {useNavigate} from 'react-router-dom'
 
 const App = () => {
+  // const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     age: 18,
     selectedBatch: '',
+    phone: ''
   });
 
   const handleInputChange = (e) => {
@@ -30,33 +33,68 @@ const App = () => {
     e.preventDefault();
     try {
       // Basic client-side validation
+      if (!formData.name || !formData.age || !formData.selectedBatch || !formData.phone) {
+        toast.error('Please fill out all fields.');
+        return;
+      }
+  
       if (formData.age < 18 || formData.age > 65) {
         toast.error('Age must be between 18 and 65.');
         return;
       }
-
+  
       // Call the backend API to store data
-      const response = await axios.post('http://your-api-endpoint/admission', formData);
-
+      const response = await axios.post('http://localhost:3001/login', formData);
+  
       // Mock payment function
       const paymentResponse = await CompletePayment(response.data);
-
+  
       // Handle payment response in the frontend as needed
       toast.success(paymentResponse.message);
-
+  
       // Reset the form
       setFormData({
         name: '',
         age: 18,
+        phone: '',
         selectedBatch: '',
       });
-
+  
       alert('Admission successful!');
     } catch (error) {
       console.error('Error during admission:', error.message);
       toast.error('Error during admission. Please try again.');
     }
   };
+
+  const PosTData = async(e) => {
+    e.preventDefault();
+
+    const {name, age, phone, selectedBatch} = formData;
+    const res = await fetch("/login", {
+      method: "POST",
+      headers : {
+        "Content-Type" :  "application/json"
+      },
+      body:JSON.stringify({
+        name, age, phone, selectedBatch
+      })
+    });
+
+    const data = await res.json();
+
+    if(res.status === 400 || !data){
+      window.alert("Invalid Registration");
+      console.log("Invalid")
+    }
+    else{
+      window.alert("Success");
+      console.log("Success");
+
+      // navigate.push("/login");
+    }
+  }
+  
 
   return (
     <div className='container'>
@@ -65,17 +103,19 @@ const App = () => {
         <p className='h1'>YogGuru Admission Form</p>
       </header>
       <main>
-        <form onSubmit={handleSubmit}>
+        <form method="POST" onSubmit={handleSubmit}>
           <label>
             <p>Name:</p>
             <input type="text" name="name" value={formData.name} onChange={handleInputChange} />
           </label>
-          <br />
           <label>
           <p>Age:</p>
             <input type="number" name="age" value={formData.age} onChange={handleInputChange} />
           </label>
-          <br />
+          <label>
+          <p>Phone Number:</p>
+            <input name="phone" value={formData.phone} onChange={handleInputChange} />
+          </label>
           <label>
           <p>Select Batch:</p>
             <select name="selectedBatch" value={formData.selectedBatch} onChange={handleInputChange}>
@@ -87,7 +127,9 @@ const App = () => {
             </select>
           </label>
           <br />
-          <button type="submit">Submit</button>
+            <a href="/" target="_blank" rel="noopener noreferrer">
+            <button type="submit">Make Payment</button>
+            </a>          
         </form>
       </main>
       <ToastContainer />
