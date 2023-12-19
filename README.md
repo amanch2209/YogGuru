@@ -16,3 +16,11 @@ In order to build the application we have made some assumptions for it's smooth 
 1. The first assumption is that the user will fill out the admission every month in order to renew the membership.
 2. The user can fill out the form at any day of the month but they have to pay for the entire month.
 3. The payment is done automatically once the user enters the payment details and hence there is no payment gateway.
+
+
+## Validations Done
+In order to ensure that there is no data redundancy in the data store via the application certain validations have been done which are mentioned below :
+<br>
+1. The application ensures that while submitting the data there must not be any empty field if it happens the frontend will give a warning.
+2. The age must be between 18 years and 65 years.
+   
