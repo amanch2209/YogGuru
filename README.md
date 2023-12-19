@@ -1,4 +1,4 @@
-# YogGu
+# YogGuru
 
 ## Introduction
 YogGuru is a full stack based application using MERN stack. The application is used to enroll interested students in the Yoga classes as per their selected batch timings on a monthly basis by paying Rs 500 as the enrollment fee. It consists of three React components where one component is the Header and other two are used to ask the person's details and to ask for the payment details respectively.
