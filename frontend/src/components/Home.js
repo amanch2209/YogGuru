@@ -48,7 +48,7 @@ const App = () => {
       }
   
       // Call the backend API to store data
-      const response = await axios.post('https://yog-guru-backend-api.vercel.app/login', formData);
+      const response = await axios.post('http://localhost:3002/login', formData);
   
       const userData = response.data;
 

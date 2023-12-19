@@ -7,13 +7,7 @@ const dotenv = require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3002
 
-app.use(cors(
-  {
-    origin : ["https://yog-guru-frontend-api.vercel.app"],
-    methods : ["POST"],
-    credentials : true
-  }
-));
+app.use(cors());
 app.use(express.json({limit : "10mb"})) // Use express.json() middleware to parse JSON in the request body
 
 // Connect to MongoDB
