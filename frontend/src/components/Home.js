@@ -48,7 +48,7 @@ const App = () => {
       }
   
       // Call the backend API to store data
-      const response = await axios.post('http://localhost:3002/login', formData);
+      const response = await axios.post('https://real-pink-bass-boot.cyclic.app', formData);
   
       const userData = response.data;
 

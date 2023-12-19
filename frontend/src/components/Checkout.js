@@ -42,7 +42,7 @@ const Checkout = () => {
         return;
       }
 
-    const response = await axios.post('http://localhost:3002/payment', formData);
+    const response = await axios.post('https://real-pink-bass-boot.cyclic.app', formData);
   
       const userData = response.data;
       const paymentResponse = await CompletePayment(userData);
