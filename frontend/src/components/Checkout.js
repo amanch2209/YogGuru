@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import '../components/style.css'
 import logo from '../images/logo.png'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import Home from '../components/Home'
 
 const Checkout = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
-    address: '',
     cardNumber: '',
     expiryDate: '',
     cvv: '',
@@ -19,12 +24,77 @@ const Checkout = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const CompletePayment = async (userData) => {
+    // Mock payment function (replace with actual payment processing logic)
+
+    console.log('Processing payment for:', userData);
+    return { success: true, message: 'Payment successful' };
+  };
+
+  const handleSubmit = async(e) => {
     e.preventDefault();
     // Add logic for handling the checkout submission (e.g., payment processing)
     console.log('Form submitted:', formData);
+    try {
+      // Basic client-side validation
+      if (!formData.fullName || !formData.email || !formData.cardNumber || !formData.expiryDate || !formData.cvv) {
+        toast.error('Please fill out all fields.');
+        return;
+      }
+
+    const response = await axios.post('http://localhost:3002/payment', formData);
+  
+      const userData = response.data;
+      const paymentResponse = await CompletePayment(userData);
+
+      setFormData({
+        fullName: '',
+        email: '',
+        cardNumber: '',
+        expiryDate: '',
+        cvv: '',
+      })
+      if (paymentResponse.success) {
+        // toast.success(paymentResponse.message);
+        alert('Admission successful!');
+        navigate('/')
+      } else {
+        toast.error(paymentResponse.message);
+      }
+    } catch (error) {
+      console.error('Error during admission:', error.message);
+      toast.error('Error during admission. Please try again.');
+    }
     // You can call your payment processing function or API here
   };
+
+  const PosTData = async(e) => {
+    e.preventDefault();
+
+    const {fullName, email, cardNumber, expiryDate, cvv} = formData;
+    const res = await fetch("/payment", {
+      method: "POST",
+      headers : {
+        "Content-Type" :  "application/json"
+      },
+      body:JSON.stringify({
+        fullName, email, cardNumber, expiryDate, cvv
+      })
+    });
+
+    const data = await res.json();
+
+    if(res.status === 400 || !data){
+      window.alert("Invalid Registration");
+      console.log("Invalid")
+    }
+    else{
+      window.alert("Success");
+      console.log("Success");
+
+      // navigate.push("/login");
+    }
+  }
 
   return (
     <div className="checkout-container">
@@ -34,16 +104,15 @@ const Checkout = () => {
       </div>
       <form onSubmit={handleSubmit}>
         <label>
-          <p>Full Name:</p>
-          <input type="text" name="Name" value={formData.fullName} onChange={handleInputChange} required />
+          <h4>Monthly Fee: ₹500</h4>
+        </label>
+        <label>
+          <p>Name:</p>
+          <input type="text" name="fullName" value={formData.fullName} onChange={handleInputChange} required />
         </label>
         <label>
           <p>Email:</p>
           <input type="email" name="email" value={formData.email} onChange={handleInputChange} required />
-        </label>
-        <label>
-          <p>Address:</p>
-          <textarea name="address" value={formData.address} onChange={handleInputChange} required />
         </label>
         <label>
           <p>Card Number:</p>
@@ -53,7 +122,7 @@ const Checkout = () => {
           <div>
             <label>
               <p>Expiry Date:</p>
-              <input type="text" name="expiryDate" value={formData.expiryDate} onChange={handleInputChange} required />
+              <input type="month" name="expiryDate" value={formData.expiryDate} onChange={handleInputChange} required />
             </label>
           </div>
           <div>
@@ -63,8 +132,9 @@ const Checkout = () => {
             </label>
           </div>
         </div>
-        <button type="submit">Proceed to Payment</button>
+        <button type="submit" id='checkoutButton'>Proceed to Payment</button>
       </form>
+      {window.location.pathname === '../components/Home' && <Home />}
     </div>
   );
 };

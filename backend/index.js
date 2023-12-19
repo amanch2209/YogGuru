@@ -3,10 +3,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv').config();
-const Stripe = require('stripe')
 
 const app = express();
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3002
 
 app.use(cors());
 app.use(express.json({limit : "10mb"})) // Use express.json() middleware to parse JSON in the request body
@@ -28,32 +27,22 @@ const yogaClassSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now },
 });
 
+const paymentSchema = new mongoose.Schema({
+  fullName: { type: String, required: true },
+  email: { type: String, required: true },
+  cardNumber: { type: String, required: true },
+  expiryDate: { type: Date, required: true },
+  cvv: { type: Number, required: true, min: 100, max:999},
+  timestamp: { type: Date, default: Date.now },
+});
+
 // payment gateway
-const stripe  = new Stripe("pk_test_51OOnS0SJze0uzSMvUw2yUYUIchshSjsibFSvrHtZhLtZpa7k6W1LimnsauV8DvwNBywJIDCh1y9cuw2b8j8qriWH00tR5YR4ad")
-app.post("/create-checkout-session",async(req,res)=>{
 
-  try{
-   const params = {
-       submit_type : 'pay',
-       mode : "payment",
-       payment_method_types : ['card'],
-
-       success_url : `${process.env.FRONTEND_URL}`,
-       cancel_url : `${process.env.FRONTEND_URL}`,
-
-   }
-   const session = await stripe.checkout.sessions.create(params)
-      // console.log(session)
-      res.status(200).json(session.id)
-     }
-     catch (err){
-        res.status(err.statusCode || 500).json(err.message)
-     }
-
-})
 
 // Create a model based on the schema
 const YogaClass = mongoose.model('login', yogaClassSchema);
+const Payment = mongoose.model('payment', paymentSchema);
+
 
 // Endpoint for admitting a participant
 app.post('/login', async (req, res) => {
@@ -85,6 +74,31 @@ app.post('/login', async (req, res) => {
 
   } catch (error) {
     console.error('Error during admission:', error.message);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/payment', async (req, res) => {
+  try {
+    const { fullName, email, cardNumber, expiryDate, cvv } = req.body;
+
+    if (!fullName || !email || !cardNumber || !expiryDate || !cvv) {
+      return res.status(400).json({ error: 'All payment fields are required' });
+    }
+
+    const newPayment = new Payment({
+      fullName,
+      email,
+      cardNumber,
+      expiryDate,
+      cvv,
+    });
+    const save_payment = await newPayment.save();
+
+    return res.status(200).json({ message: 'Payment successful' });
+
+  } catch (error) {
+    console.error('Error during payment:', error.message);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 });

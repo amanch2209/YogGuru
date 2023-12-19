@@ -48,7 +48,7 @@ const App = () => {
       }
   
       // Call the backend API to store data
-      const response = await axios.post('http://localhost:3001/login', formData);
+      const response = await axios.post('http://localhost:3002/login', formData);
   
       const userData = response.data;
 
@@ -141,14 +141,7 @@ const App = () => {
             </select>
           </label>
           <br />
-
-            {/* <a href="" target="_blank" rel="noopener noreferrer">  */}
-
-            <button type="submit" id='checkoutButton' >Make Payment</button> 
-            {/* </a>           */}
-            {/* <Link to={Checkout}>
-               <button type="button">Make Payment</button>
-            </Link> */}
+          <button type="submit" id='checkoutButton' >Make Payment</button> 
         </form>
         {window.location.pathname === '../components/Checkout' && <Checkout />}
       </main>
