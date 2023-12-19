@@ -8,6 +8,8 @@ We have maintained two databases for the two components to store the person's de
 <br>
 The first database i.e 'logins' has two candidate keys 'Phone Number' and 'Email' where 'Phone Number' is used as the primary key for the database whereas 'Email' is used as the foreign key to set a referential integrity with the 'payments' database.  
 
+
+
 ## Assumptions Made
 In order to build the application we have made some assumptions for it's smooth performance and to avoid certain ambiguities. 
 <br>
