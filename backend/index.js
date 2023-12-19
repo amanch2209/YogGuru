@@ -23,6 +23,7 @@ const yogaClassSchema = new mongoose.Schema({
   name: { type: String, required: true },
   age: { type: Number, required: true, min: 18, max: 65 },
   phone: {type:Number, required: true},
+  email: {type:String, required: true},
   selectedBatch: { type: String, required: true },
   timestamp: { type: Date, default: Date.now },
 });
@@ -58,7 +59,7 @@ const YogaClass = mongoose.model('login', yogaClassSchema);
 app.post('/login', async (req, res) => {
   try {
     // Basic server-side validation
-    const { name, age, phone, selectedBatch } = YogaClass(req.body);
+    const { name, age, phone, email, selectedBatch } = YogaClass(req.body);
 
     if (!name || !selectedBatch) {
       return res.status(400).json({ error: 'Name and selectedBatch are required fields' });
@@ -69,6 +70,7 @@ app.post('/login', async (req, res) => {
       name,
       age,
       phone,
+      email,
       selectedBatch,
     });
 
