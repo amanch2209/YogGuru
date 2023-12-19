@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3002
 
 app.use(cors(
   {
-    origin : [],
+    origin : ["https://yog-guru-frontend-api.vercel.app"],
     methods : ["POST"],
     credentials : true
   }
