@@ -7,7 +7,13 @@ const dotenv = require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3002
 
-app.use(cors());
+app.use(cors(
+  {
+    origin : [],
+    methods : ["POST"],
+    credentials : true
+  }
+));
 app.use(express.json({limit : "10mb"})) // Use express.json() middleware to parse JSON in the request body
 
 // Connect to MongoDB
@@ -43,7 +49,9 @@ const paymentSchema = new mongoose.Schema({
 const YogaClass = mongoose.model('login', yogaClassSchema);
 const Payment = mongoose.model('payment', paymentSchema);
 
-
+app.get('/', (req,res)=>{
+  res.json("Hello");
+})
 // Endpoint for admitting a participant
 app.post('/login', async (req, res) => {
   try {
